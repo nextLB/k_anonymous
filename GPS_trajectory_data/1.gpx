@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<gpx version="1.1" creator="GPSBabel - http://www.gpsbabel.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.topografix.com/GPX/1/1" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <link href="http://www.garmin.com">
+      <text>Garmin International</text>
+    </link>
+    <time>2026-03-03T10:27:05Z</time>
+    <bounds minlat="31.5021571609357" minlon="120.36905333333334" maxlat="31.50306833333333" maxlon="120.369855133751" />
+  </metadata>
+  <extensions>
+    <name><![CDATA[2026-03-03 18:27无锡新吴区]]>
+    </name>
+    <description><![CDATA[]]>
+    </description>
+    <TrackId>0</TrackId>
+    <TrackTypeId>8</TrackTypeId>
+    <TrackTags>爬山</TrackTags>
+    <BeginTime>1772533625000</BeginTime>
+    <EndTime>1772533750000</EndTime>
+    <TimeUsed>125248</TimeUsed>
+    <PauseTime>3476</PauseTime>
+    <PosStartName>无锡市新吴区城南路</PosStartName>
+    <PosEndName>无锡市新吴区城南路</PosEndName>
+    <ProductVersion>and_8.1.5</ProductVersion>
+    <StartDistrictId>0</StartDistrictId>
+    <EndDistrictId>0</EndDistrictId>
+    <CreaterId>66637251</CreaterId>
+    <CreaterName><![CDATA[What_LBL11815006]]>
+    </CreaterName>
+    <CreaterIcon>0</CreaterIcon>
+    <OriginCreaterId>66637251</OriginCreaterId>
+    <OriginCreaterNickname><![CDATA[What_LBL11815006]]>
+    </OriginCreaterNickname>
+    <OriginCreaterName><![CDATA[zs_CC005]]>
+    </OriginCreaterName>
+    <OriginCreaterIcon>0</OriginCreaterIcon>
+    <ThumbnailId>0</ThumbnailId>
+    <Distance>135.46845343898465</Distance>
+    <ElevationGain>0.0</ElevationGain>
+    <ElevationLoss>10.15541501031747</ElevationLoss>
+    <SportAvgSpeed>1.1124762132426556</SportAvgSpeed>
+  </extensions>
+  <trk>
+    <trkseg>
+      <trkpt lat="31.50306833333333" lon="120.36915333333333">
+        <ele>26.6</ele>
+        <time>2026-03-03T10:27:06Z</time>
+        <speed>1.3815144</speed>
+      </trkpt>
+      <trkpt lat="31.502996666666665" lon="120.36905333333334">
+        <ele>26.6</ele>
+        <time>2026-03-03T10:27:14Z</time>
+        <speed>0.9352503</speed>
+      </trkpt>
+      <trkpt lat="31.502908076812513" lon="120.36905769298951">
+        <ele>24.27713757138949</ele>
+        <time>2026-03-03T10:27:26Z</time>
+        <speed>0.8065697</speed>
+      </trkpt>
+      <trkpt lat="31.502835789431614" lon="120.36912812941647">
+        <ele>23.34062070722338</ele>
+        <time>2026-03-03T10:27:34Z</time>
+        <speed>1.054151</speed>
+      </trkpt>
+      <trkpt lat="31.50276474482954" lon="120.36921097230415">
+        <ele>23.495211199225498</ele>
+        <time>2026-03-03T10:27:44Z</time>
+        <speed>1.0865786</speed>
+      </trkpt>
+      <trkpt lat="31.50269639456986" lon="120.3692986788668">
+        <ele>23.32520726477235</ele>
+        <time>2026-03-03T10:27:52Z</time>
+        <speed>1.1637869</speed>
+      </trkpt>
+      <trkpt lat="31.502618726654536" lon="120.36938576201536">
+        <ele>21.894837075386715</ele>
+        <time>2026-03-03T10:28:02Z</time>
+        <speed>1.1256975</speed>
+      </trkpt>
+      <trkpt lat="31.502537327002905" lon="120.36947144909715">
+        <ele>20.21943509242837</ele>
+        <time>2026-03-03T10:28:12Z</time>
+        <speed>1.1570956</speed>
+      </trkpt>
+      <trkpt lat="31.50246492423824" lon="120.36954910643446">
+        <ele>18.447420091816973</ele>
+        <time>2026-03-03T10:28:20Z</time>
+        <speed>1.1900377</speed>
+      </trkpt>
+      <trkpt lat="31.502389932062176" lon="120.36962324222031">
+        <ele>17.308606635515076</ele>
+        <time>2026-03-03T10:28:30Z</time>
+        <speed>1.1236386</speed>
+      </trkpt>
+      <trkpt lat="31.502312453385958" lon="120.36969246269777">
+        <ele>16.444584989682532</ele>
+        <time>2026-03-03T10:28:40Z</time>
+        <speed>1.1679047</speed>
+      </trkpt>
+      <trkpt lat="31.502235307449116" lon="120.36977016658764">
+        <ele>15.651118847291334</ele>
+        <time>2026-03-03T10:28:50Z</time>
+        <speed>1.145257</speed>
+      </trkpt>
+      <trkpt lat="31.5021571609357" lon="120.369855133751">
+        <ele>14.854842102612476</ele>
+        <time>2026-03-03T10:29:00Z</time>
+        <speed>1.14886</speed>
+      </trkpt>
+      <trkpt lat="31.5021571609357" lon="120.369855133751">
+        <ele>14.854842102612476</ele>
+        <time>2026-03-03T10:29:08Z</time>
+        <speed>1.14886</speed>
+      </trkpt>
+      <extensions>
+        <PauseTimes>1772533748382:pause</PauseTimes>
+      </extensions>
+    </trkseg>
+  </trk>
+</gpx>
