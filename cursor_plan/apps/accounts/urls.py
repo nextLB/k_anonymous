@@ -1,7 +1,14 @@
+from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
 from . import views
+
+
+def logout_view(request):
+    auth_logout(request)
+    from django.contrib.auth.views import redirect_to_login
+    return redirect_to_login("/", login_url="/accounts/login/")
 
 
 urlpatterns = [
@@ -10,7 +17,7 @@ urlpatterns = [
         views.login_view,
         name="login",
     ),
-    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
+    path("logout/", logout_view, name="logout"),
     path("signup/", views.signup, name="signup"),
     path("profile/", views.profile, name="profile"),
     path("resend-verification/", views.resend_verification, name="resend_verification"),
