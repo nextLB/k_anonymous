@@ -1,0 +1,29 @@
+{% extends "base/base.html" %}
+{% block title %}登录 - K-匿名轨迹系统{% endblock %}
+
+{% block content %}
+  <div class="grid">
+    <div class="card">
+      <h2>登录</h2>
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}" />
+        {{ form.as_p }}
+        <button class="btn" type="submit">登录</button>
+      </form>
+      <div class="row-actions" style="margin-top: 12px;">
+        <a class="btn" href="/accounts/password-reset/">忘记密码</a>
+        <a class="btn" href="/accounts/signup/">注册新账号</a>
+      </div>
+    </div>
+    <div class="card">
+      <h3>说明</h3>
+      <ul>
+        <li><span class="badge">支持</span> 用“用户名”或“邮箱”登录</li>
+        <li><span class="badge">邮箱验证</span> 用于找回密码与（可选）进入核心功能的限制</li>
+        <li><span class="badge">CAS</span> 如需校统一身份认证，可按 `settings.py` 启用</li>
+      </ul>
+    </div>
+  </div>
+{% endblock %}
+

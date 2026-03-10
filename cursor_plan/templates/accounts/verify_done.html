@@ -1,0 +1,14 @@
+{% extends "base/base.html" %}
+{% block title %}邮箱验证成功 - K-匿名轨迹系统{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2>邮箱验证成功</h2>
+    <p class="muted">你好，{{ username }}。你现在可以正常使用系统功能了。</p>
+    <div class="row-actions">
+      <a class="btn" href="/accounts/login/">去登录</a>
+      <a class="btn" href="/dashboard/">去仪表盘</a>
+    </div>
+  </div>
+{% endblock %}
+

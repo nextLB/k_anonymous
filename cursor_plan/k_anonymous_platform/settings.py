@@ -26,6 +26,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "apps.accounts.middleware.EmailVerifiedRequiredMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -84,6 +85,16 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/accounts/login/"
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+# 邮件（开发默认打印到控制台；你可自行改为 SMTP）
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "no-reply@k-anonymous.local"
+SITE_URL = "http://127.0.0.1:8000"
+
+# 可选：是否强制邮箱验证后才能访问核心功能
+REQUIRE_EMAIL_VERIFICATION = False
+# 验证链接有效期（秒）
+ACCOUNT_EMAIL_VERIFICATION_SECONDS = 60 * 60 * 24 * 3
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [

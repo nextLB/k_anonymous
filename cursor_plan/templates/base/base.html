@@ -17,9 +17,11 @@
           <a href="/trajectories/upload/">上传轨迹</a>
           {% if user.is_authenticated %}
             <span class="muted">用户：{{ user.username }}</span>
+            <a href="/accounts/profile/">账户</a>
             <a href="/accounts/logout/">退出</a>
           {% else %}
             <a href="/accounts/login/">登录</a>
+            <a href="/accounts/signup/">注册</a>
           {% endif %}
         </nav>
       </div>

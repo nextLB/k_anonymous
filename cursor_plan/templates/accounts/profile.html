@@ -1,0 +1,45 @@
+{% extends "base/base.html" %}
+{% block title %}账户 - K-匿名轨迹系统{% endblock %}
+
+{% block content %}
+  <div class="grid">
+    <div class="card">
+      <h2>账户信息</h2>
+      <div style="display:grid; gap: 6px;">
+        <div><span class="badge">用户名</span> {{ user.username }}</div>
+        <div><span class="badge">邮箱</span> {{ user.email|default:"(未设置)" }}</div>
+        <div>
+          <span class="badge">邮箱状态</span>
+          {% if profile.email_verified %}
+            <span style="color: var(--ok); font-weight: 700;">已验证</span>
+          {% else %}
+            <span style="color: var(--danger); font-weight: 700;">未验证</span>
+          {% endif %}
+        </div>
+        {% if require_verification and not profile.email_verified %}
+          <div class="muted">当前配置为：必须验证邮箱后才能使用核心功能。</div>
+        {% endif %}
+      </div>
+
+      <div class="row-actions" style="margin-top: 12px;">
+        {% if not profile.email_verified %}
+          <form method="post" action="/accounts/resend-verification/">
+            {% csrf_token %}
+            <button class="btn" type="submit">重新发送验证邮件</button>
+          </form>
+        {% endif %}
+        <a class="btn" href="/accounts/password-change/">修改密码</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>安全提示</h2>
+      <ul>
+        <li><span class="badge">建议</span> 使用强密码（长度更长、含字母数字符号）</li>
+        <li><span class="badge">建议</span> 开发环境邮件会输出到运行服务器的控制台</li>
+        <li><span class="badge">权限</span> 原始轨迹默认仅本人可见；匿名结果可下载共享</li>
+      </ul>
+    </div>
+  </div>
+{% endblock %}
+
