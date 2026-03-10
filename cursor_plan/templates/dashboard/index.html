@@ -1,0 +1,58 @@
+{% extends "base/base.html" %}
+{% block title %}仪表盘 - K-匿名轨迹系统{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2>我的轨迹</h2>
+    <p class="muted">从这里发起“一键匿名”，并查看匿名前后对比与下载。</p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>轨迹</th>
+          <th>点数</th>
+          <th>长度</th>
+          <th>状态</th>
+          <th>匿名</th>
+          <th>最近一次运行</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t, r in rows %}
+          <tr>
+            <td>
+              <div><strong>{{ t.name|default:t.source_filename|default:"(未命名)" }}</strong></div>
+              <div class="muted">ID: {{ t.id }} · {{ t.created_at }}</div>
+            </td>
+            <td class="muted">{{ t.raw_points_count }} → {{ t.cleaned_points_count }}</td>
+            <td class="muted">{{ t.length_m_cleaned|floatformat:1 }} m</td>
+            <td><span class="badge">{{ t.status }}</span></td>
+            <td>
+              <form method="post" action="/dashboard/run/{{ t.id }}/start/">
+                {% csrf_token %}
+                <div class="row-actions">
+                  <div style="min-width: 120px;">k {{ form.k }}</div>
+                  <label class="muted" style="display:flex; align-items:center; gap:6px;">{{ form.adaptive_k }} 自适应k</label>
+                  <div style="min-width: 190px;">长度误差上限 {{ form.max_length_error_ratio }}</div>
+                  <div style="min-width: 170px;">方向差异° {{ form.direction_diversity_deg }}</div>
+                  <div style="min-width: 160px;">噪声(m) {{ form.synthetic_noise_m }}</div>
+                  <button class="btn" type="submit">一键匿名</button>
+                </div>
+              </form>
+            </td>
+            <td>
+              {% if r %}
+                <a href="/dashboard/run/{{ r.id }}/">查看</a>
+                <div class="muted">run {{ r.id }} · k={{ r.k }} · |A|={{ r.anonymized_set_size }}</div>
+              {% else %}
+                <div class="muted">暂无</div>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6" class="muted">你还没有轨迹。先去 <a href="/trajectories/upload/">上传轨迹</a>。</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
+

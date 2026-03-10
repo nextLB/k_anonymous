@@ -1,0 +1,31 @@
+{% extends "base/base.html" %}
+{% block title %}上传轨迹 - K-匿名轨迹系统{% endblock %}
+
+{% block content %}
+  <div class="grid">
+    <div class="card">
+      <h2>上传轨迹</h2>
+      <p class="muted">支持 GPX `.gpx` / GeoLife `.plt` / CSV / JSON。上传后会自动清洗、补全并压缩。</p>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn" type="submit">上传并清洗</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3>建议数据列</h3>
+      <ul>
+        <li><span class="badge">GPX</span> 读取 <code>&lt;trkpt lat="" lon=""&gt;&lt;time&gt;...&lt;/time&gt;</code></li>
+        <li><span class="badge">CSV</span> 至少包含 <code>lat, lon, timestamp</code></li>
+        <li><span class="badge">JSON</span> 形如 <code>[{"lat":..,"lon":..,"ts":..}, ...]</code></li>
+        <li><span class="badge">GeoLife</span> 按原标准（含表头 6 行）</li>
+      </ul>
+      <p class="muted">敏感区域抑制（宿舍/实验室/食堂等）请到“敏感 POI”页面配置。</p>
+      <div class="row-actions">
+        <a class="btn" href="/trajectories/pois/">配置敏感 POI</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

@@ -1,0 +1,49 @@
+{% extends "base/base.html" %}
+{% block title %}敏感 POI - K-匿名轨迹系统{% endblock %}
+
+{% block content %}
+  <div class="grid">
+    <div class="card">
+      <h2>添加敏感 POI（用于抑制策略）</h2>
+      <p class="muted">以圆形区域表示：中心点 + 半径（米）。</p>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn" type="submit">添加</button>
+      </form>
+    </div>
+    <div class="card">
+      <h2>我的敏感 POI</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>名称</th>
+            <th>类别</th>
+            <th>中心</th>
+            <th>半径</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for poi in items %}
+            <tr>
+              <td>{{ poi.name }}</td>
+              <td class="muted">{{ poi.category }}</td>
+              <td class="muted">{{ poi.center_lat }}, {{ poi.center_lon }}</td>
+              <td class="muted">{{ poi.radius_m }} m</td>
+              <td>
+                <form method="post" action="/trajectories/pois/{{ poi.id }}/delete/">
+                  {% csrf_token %}
+                  <button class="btn" type="submit" style="background: linear-gradient(135deg, rgba(255,106,106,0.95), rgba(255,134,92,0.95));">删除</button>
+                </form>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5" class="muted">暂无</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}
+

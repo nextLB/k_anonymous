@@ -1,0 +1,17 @@
+{% extends "base/base.html" %}
+{% block title %}登录 - K-匿名轨迹系统{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2>登录</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn" type="submit">登录</button>
+    </form>
+    <p class="muted" style="margin-top: 12px;">
+      如需接入校统一身份认证（CAS），请在 `k_anonymous_platform/settings.py` 中启用 `CAS_ENABLED` 并配置 CAS 参数。
+    </p>
+  </div>
+{% endblock %}
+
