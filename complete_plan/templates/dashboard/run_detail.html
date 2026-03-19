@@ -65,36 +65,127 @@
     }
 
     function hasCoordinates(geojson) {
-      return geojson && 
-             geojson.geometry && 
-             geojson.geometry.coordinates && 
-             geojson.geometry.coordinates.length > 0;
+      if (!geojson || !geojson.geometry || !geojson.geometry.coordinates) {
+        return false;
+      }
+      const coords = geojson.geometry.coordinates;
+      // 检查坐标数组是否非空，且第一个元素是有效的 [lon, lat] 数组
+      if (!Array.isArray(coords) || coords.length === 0) {
+        return false;
+      }
+      // 检查第一个坐标点是否有效
+      const firstCoord = coords[0];
+      if (!Array.isArray(firstCoord) || firstCoord.length < 2) {
+        return false;
+      }
+      const [lon, lat] = firstCoord;
+      if (typeof lon !== 'number' || typeof lat !== 'number' ||
+          isNaN(lon) || isNaN(lat) || lon < -180 || lon > 180 || lat < -90 || lat > 90) {
+        return false;
+      }
+      return true;
     }
 
     (async () => {
       try {
+        // 检查 Leaflet 是否加载
+        if (typeof L === 'undefined') {
+          throw new Error('Leaflet 地图库未加载，请检查网络连接');
+        }
+
         const map = L.map("map");
-        const base = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { 
-          maxZoom: 19,
-          attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
-        });
-        base.addTo(map);
+
+        // 多个免费地图瓦片服务（备用）
+        const tileLayers = {
+          "高德街道": L.tileLayer("https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}", {
+            maxZoom: 19,
+            subdomains: "1234",
+            attribution: '&copy; <a href="https://www.autonavi.com/">高德地图</a>'
+          }),
+          "高德卫星": L.tileLayer("https://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}", {
+            maxZoom: 18,
+            subdomains: "1234",
+            attribution: '&copy; <a href="https://www.autonavi.com/">高德地图</a>'
+          }),
+          "CartoDB (浅色)": L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://carto.com/">CARTO</a>'
+          }),
+          "Stamen Terrain": L.tileLayer("https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png", {
+            maxZoom: 18,
+            attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>'
+          }),
+          "OSM": L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
+          })
+        };
+
+        // 添加第一个图层作为默认
+        const defaultLayer = tileLayers["高德街道"];
+        defaultLayer.addTo(map);
+
+        // 注意：图层控制在最后统一添加，包含base和overlay图层
+
+        // 显示地图加载状态
+        const mapContainer = document.getElementById('map');
+        const loadingDiv = document.createElement('div');
+        loadingDiv.id = 'map-loading';
+        loadingDiv.innerHTML = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:1000;"><div style="color:#6aa8ff;font-size:16px;margin-bottom:10px;">加载地图中...</div><div style="color:#a8b2d8;font-size:12px;">如果地图无法显示，请尝试右上角切换地图源</div></div>';
+        loadingDiv.style.position = 'absolute';
+        loadingDiv.style.top = '0';
+        loadingDiv.style.left = '0';
+        loadingDiv.style.width = '100%';
+        loadingDiv.style.height = '100%';
+        loadingDiv.style.backgroundColor = 'rgba(11, 16, 32, 0.9)';
+        loadingDiv.style.zIndex = '1000';
+        mapContainer.style.position = 'relative';
+        mapContainer.appendChild(loadingDiv);
 
         const data = await loadRunGeoJSON();
 
-        const layers = {};
-        
+        // 移除加载状态
+        const existingLoadingDiv = document.getElementById('map-loading');
+        if (existingLoadingDiv) {
+          existingLoadingDiv.remove();
+        }
+
+        // 检查是否有有效数据
+        let hasValidData = false;
+        if (hasCoordinates(data.raw) || hasCoordinates(data.cleaned) || (data.anon_set && data.anon_set.length > 0)) {
+          hasValidData = true;
+        }
+
+        if (!hasValidData) {
+          console.warn('没有有效的轨迹数据可以显示在地图上');
+          // 显示提示信息
+          const noDataDiv = document.createElement('div');
+          noDataDiv.innerHTML = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:1000;"><div style="color:#ff6a6a;font-size:16px;margin-bottom:10px;">⚠️ 没有有效的轨迹数据</div><div style="color:#a8b2d8;font-size:12px;">无法在地图上显示轨迹，请检查数据完整性</div></div>';
+          noDataDiv.style.position = 'absolute';
+          noDataDiv.style.top = '0';
+          noDataDiv.style.left = '0';
+          noDataDiv.style.width = '100%';
+          noDataDiv.style.height = '100%';
+          noDataDiv.style.backgroundColor = 'rgba(11, 16, 32, 0.8)';
+          noDataDiv.style.zIndex = '1000';
+          mapContainer.appendChild(noDataDiv);
+        }
+
+        const overlayLayers = {};
+
         // 检查原始轨迹数据
         if (hasCoordinates(data.raw)) {
-          layers["原始轨迹"] = L.geoJSON(data.raw, { style: () => lineStyle("#6aa8ff", 4) });
-          layers["原始轨迹"].addTo(map);
+          const rawLayer = L.geoJSON(data.raw, { style: () => lineStyle("#6aa8ff", 4) });
+          rawLayer.addTo(map);
+          overlayLayers["原始轨迹"] = rawLayer;
         } else {
           console.warn("原始轨迹数据为空");
         }
-        
+
         // 检查清洗后轨迹
         if (hasCoordinates(data.cleaned)) {
-          layers["清洗后轨迹"] = L.geoJSON(data.cleaned, { style: () => lineStyle("#6affb0", 4, "6 6") });
+          const cleanedLayer = L.geoJSON(data.cleaned, { style: () => lineStyle("#6affb0", 4, "6 6") });
+          overlayLayers["清洗后轨迹"] = cleanedLayer;
         } else {
           console.warn("清洗后轨迹数据为空");
         }
@@ -114,32 +205,46 @@
           l.bindTooltip(lbl);
           anonGroup.addLayer(l);
         }
-        
+
         if (anonCount > 0) {
-          layers["匿名集（target+synthetic）"] = anonGroup;
           anonGroup.addTo(map);
+          overlayLayers["匿名集（target+synthetic）"] = anonGroup;
         } else {
           console.warn("匿名集数据为空");
         }
 
-        // 设置视图
+        // 设置视图 - 只对有效的图层计算边界
+        console.log('可用叠加图层:', Object.keys(overlayLayers));
         let bounds = null;
-        for (const name in layers) {
-          const layerBounds = layers[name].getBounds();
-          if (layerBounds.isValid()) {
-            if (bounds) bounds.extend(layerBounds);
-            else bounds = layerBounds;
+        for (const name in overlayLayers) {
+          const layer = overlayLayers[name];
+          console.log(`处理叠加图层 "${name}":`, layer);
+          if (layer && typeof layer.getBounds === 'function') {
+            const layerBounds = layer.getBounds();
+            console.log(`叠加图层 "${name}" 边界:`, layerBounds);
+            if (layerBounds && layerBounds.isValid && layerBounds.isValid()) {
+              if (bounds) bounds.extend(layerBounds);
+              else bounds = layerBounds;
+            }
+          } else {
+            console.warn(`叠加图层 "${name}" 无效或缺少 getBounds 方法`);
           }
         }
-        
-        if (bounds && bounds.isValid()) {
+
+        if (bounds && bounds.isValid && bounds.isValid()) {
           map.fitBounds(bounds.pad(0.2));
         } else {
           // 默认视图 - 中国区域
           map.setView([30.0, 120.0], 10);
+          console.log('使用默认视图，未找到有效的轨迹边界');
         }
 
-        L.control.layers(null, layers, { collapsed: false }).addTo(map);
+        // 只添加有叠加图层的控制
+        if (Object.keys(overlayLayers).length > 0) {
+          L.control.layers(tileLayers, overlayLayers, { collapsed: false }).addTo(map);
+        } else {
+          console.warn('没有有效的叠加图层可显示');
+        }
       } catch (err) {
         console.error("地图加载错误:", err);
         document.getElementById('map').innerHTML = 
