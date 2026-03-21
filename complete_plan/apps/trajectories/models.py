@@ -44,16 +44,36 @@ class TrajectoryPoint(models.Model):
         return f"Point(t={self.ts}, lat={self.lat}, lon={self.lon})"
 
 
+class SemanticCategory(models.Model):
+    """
+    POI语义泛化类别定义
+    如"餐饮区"、"教学区"、"宿舍区"等
+    """
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class SensitivePOI(models.Model):
     """
     用户自定义敏感区域（用于抑制策略）。
 
-    为了便于原型系统跑通，这里采用“圆形区域”表示：中心点 + 半径（米）。
+    为了便于原型系统跑通，这里采用"圆形区域"表示：中心点 + 半径（米）。
     """
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     category = models.CharField(max_length=50, blank=True)
+    semantic_category = models.ForeignKey(
+        SemanticCategory, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        related_name="pois"
+    )
     center_lat = models.FloatField()
     center_lon = models.FloatField()
     radius_m = models.FloatField(default=60.0)

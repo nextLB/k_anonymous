@@ -77,3 +77,8 @@ button.btn:hover { filter: brightness(1.05); }
 
 .map { height: 420px; border-radius: 14px; overflow:hidden; border: 1px solid rgba(255,255,255,0.10); }
 
+.privacy-header { color: var(--accent); font-weight: 600; font-size: 12px; margin-right: 8px; }
+
+input[type="checkbox"] { width: auto; margin: 0; }
+label input[type="checkbox"] { margin-right: 4px; }
+

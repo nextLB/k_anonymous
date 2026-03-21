@@ -17,6 +17,13 @@ class AnonymizationRun(models.Model):
     direction_diversity_deg = models.FloatField(default=30.0)
     synthetic_noise_m = models.FloatField(default=8.0)
 
+    enable_semantic_generalization = models.BooleanField(default=False)
+    enable_pattern_obfuscation = models.BooleanField(default=False)
+    enable_differential_privacy = models.BooleanField(default=False)
+    dp_epsilon = models.FloatField(default=1.0)
+    dp_delta = models.FloatField(default=1e-5)
+    pattern_obfuscation_strength = models.FloatField(default=0.3)
+
     anonymized_set_size = models.IntegerField(default=0)
     max_linkage_prob = models.FloatField(default=1.0)
     avg_set_size = models.FloatField(default=0.0)

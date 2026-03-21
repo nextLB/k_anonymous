@@ -35,6 +35,14 @@
                   <div style="min-width: 190px;">长度误差上限 {{ form.max_length_error_ratio }}</div>
                   <div style="min-width: 170px;">方向差异° {{ form.direction_diversity_deg }}</div>
                   <div style="min-width: 160px;">噪声(m) {{ form.synthetic_noise_m }}</div>
+                </div>
+                <div class="row-actions" style="margin-top: 8px; border-top: 1px dashed #ddd; padding-top: 6px;">
+                  <span class="privacy-header">隐私增强选项：</span>
+                  <label class="muted" style="display:flex; align-items:center; gap:4px;">{{ form.enable_semantic_generalization }} 语义泛化</label>
+                  <label class="muted" style="display:flex; align-items:center; gap:4px;">{{ form.enable_pattern_obfuscation }} 模式混淆</label>
+                  <label class="muted" style="display:flex; align-items:center; gap:4px;">{{ form.enable_differential_privacy }} 差分隐私</label>
+                  <div style="min-width: 90px; display: inline-flex; align-items: center; gap: 4px;">ε {{ form.dp_epsilon }}</div>
+                  <div style="min-width: 90px; display: inline-flex; align-items: center; gap: 4px;">混淆强度 {{ form.pattern_obfuscation_strength }}</div>
                   <button class="btn" type="submit">一键匿名</button>
                 </div>
               </form>

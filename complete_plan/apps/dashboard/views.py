@@ -10,8 +10,13 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods
 
 from apps.anonymizer.models import AnonymizationRun, AnonymizedPoint, AnonymizedTrajectory
-from apps.anonymizer.services import anonymize_trajectory
-from apps.trajectories.models import Trajectory, TrajectoryPoint
+from apps.anonymizer.services import (
+    anonymize_trajectory,
+    apply_differential_privacy,
+    generalize_poi_semantics,
+    obfuscate_trajectory_pattern,
+)
+from apps.trajectories.models import SensitivePOI, Trajectory, TrajectoryPoint
 from apps.trajectories.services import Point, clean_and_impute, douglas_peucker, to_geojson_line, trajectory_length_m
 
 from .forms import RunAnonymizationForm
@@ -59,6 +64,11 @@ def run(request: HttpRequest, traj_id: int) -> HttpResponse:
         max_length_error_ratio=form.cleaned_data["max_length_error_ratio"],
         direction_diversity_deg=form.cleaned_data["direction_diversity_deg"],
         synthetic_noise_m=form.cleaned_data["synthetic_noise_m"],
+        enable_semantic_generalization=bool(form.cleaned_data.get("enable_semantic_generalization")),
+        enable_pattern_obfuscation=bool(form.cleaned_data.get("enable_pattern_obfuscation")),
+        enable_differential_privacy=bool(form.cleaned_data.get("enable_differential_privacy")),
+        dp_epsilon=form.cleaned_data.get("dp_epsilon", 1.0),
+        pattern_obfuscation_strength=form.cleaned_data.get("pattern_obfuscation_strength", 0.3),
     )
 
     try:
@@ -70,6 +80,11 @@ def run(request: HttpRequest, traj_id: int) -> HttpResponse:
             max_length_error_ratio=run_obj.max_length_error_ratio,
             direction_diversity_deg=run_obj.direction_diversity_deg,
             synthetic_noise_m=run_obj.synthetic_noise_m,
+            enable_semantic_generalization=run_obj.enable_semantic_generalization,
+            enable_pattern_obfuscation=run_obj.enable_pattern_obfuscation,
+            enable_differential_privacy=run_obj.enable_differential_privacy,
+            dp_epsilon=run_obj.dp_epsilon,
+            pattern_obfuscation_strength=run_obj.pattern_obfuscation_strength,
         )
         run_obj.anonymized_set_size = len(result.anonymous_set)
         run_obj.max_linkage_prob = float(result.max_linkage_prob)
